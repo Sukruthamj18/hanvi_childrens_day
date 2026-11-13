@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#071a16" />
+  <title>Knock knock, Hanvi! — Magical Children's Day</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Sniglet:wght@400;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="sky" aria-hidden="true">
+    <div class="sky-wash"></div>
+    <div class="stars" id="stars"></div>
+    <div class="mist mist-a"></div>
+    <div class="mist mist-b"></div>
+    <div class="fireflies" id="fireflies"></div>
+  </div>
+  <div class="fx-layer" id="fxLayer" aria-hidden="true"></div>
+
+  <main id="story">
+    <!-- 0 DOOR -->
+    <section class="scene scene-door is-active" id="sceneDoor" data-scene="door">
+      <div class="fs-copy center">
+        <p class="sparkle-line">✧ A secret surprise awaits ✧</p>
+        <h1 class="knock-title">
+          <span class="knock-line">Knock, knock,</span>
+          <span class="name-glow">Hanvi!</span>
+        </h1>
+        <p class="door-sub">Guess who's here to make your day magical?</p>
+        <button type="button" class="door" id="openDoor" aria-label="Open your surprise for Hanvi">
+          <span class="door-panel">
+            <span class="door-window"></span>
+            <span class="door-knob"></span>
+            <span class="door-label">Open me</span>
+          </span>
+          <span class="door-hint">Tap to open your surprise</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 1 HUG -->
+    <section class="scene scene-hug" id="sceneWelcome" data-scene="welcome" hidden>
+      <div class="photo-stage">
+        <img src="assets/hanvi/hanvi-yellow.jpg" alt="" class="bg-blur" aria-hidden="true" />
+        <div class="photo-frame fit-yellow">
+          <img src="assets/hanvi/hanvi-yellow.jpg" alt="Hanvi" id="hanviHug" />
+        </div>
+      </div>
+      <img src="assets/masha-full.png" alt="Masha" class="masha-float" id="mashaWelcome" />
+      <div class="fs-hud bottom" id="hugHud">
+        <p class="eyebrow">It's Masha!</p>
+        <h2 class="speak-line">Hi Hanvi… come here!</h2>
+        <p class="story-text soft" id="hugHint">A magical hug is waiting for you.</p>
+        <button type="button" class="next-btn hug-btn" id="hugBtn">Hug Hanvi!</button>
+        <button type="button" class="next-btn" id="toFlowers" hidden>Let's go! →</button>
+      </div>
+      <div class="hug-hearts" id="hugHearts" aria-hidden="true"></div>
+    </section>
+
+    <!-- 2 FLOWERS — laptop fit: blurred sides + full vertical video -->
+    <section class="scene scene-flowers" id="sceneFlowers" data-scene="flowers" hidden>
+      <div class="outer-frame">
+        <video class="bg-video" src="assets/masha-flowers.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
+        <div class="inner-frame portrait">
+          <video
+            id="mashaFlowers"
+            poster="assets/masha-flowers.png"
+            src="assets/masha-flowers.mp4"
+            muted
+            playsinline
+            loop
+            preload="auto"
+          ></video>
+        </div>
+      </div>
+      <div class="fs-hud bottom">
+        <p class="eyebrow">For you, Hanvi</p>
+        <h2 class="speak-line">Pretty flowers!</h2>
+        <p class="story-text">Masha picked the brightest blossoms just for you.</p>
+        <button type="button" class="next-btn gift-btn" id="acceptFlowers">Accept the flowers</button>
+        <button type="button" class="next-btn" id="toChocolates" hidden>What's next? →</button>
+      </div>
+    </section>
+
+    <!-- 3 CHOCOLATES -->
+    <section class="scene scene-party" id="sceneParty" data-scene="party" hidden>
+      <div class="outer-frame">
+        <video class="bg-video" src="assets/masha-chocolates.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
+        <div class="inner-frame landscape">
+          <video
+            id="mashaBear"
+            poster="assets/masha-bear-forest.png"
+            src="assets/masha-chocolates.mp4"
+            muted
+            playsinline
+            loop
+            preload="auto"
+          ></video>
+        </div>
+      </div>
+      <div class="fs-hud bottom">
+        <p class="eyebrow">Sweet surprise</p>
+        <h2 class="speak-line">Happy Children's Day!</h2>
+        <p class="story-text">Chocolates from Masha — for <strong>HANVI</strong> only!</p>
+        <button type="button" class="next-btn gift-btn" id="acceptChocolates">Give chocolates to Hanvi!</button>
+        <button type="button" class="next-btn" id="toGallery" hidden>See Hanvi's photos →</button>
+      </div>
+    </section>
+
+    <!-- 4 GALLERY -->
+    <section class="scene scene-gallery" id="sceneGallery" data-scene="gallery" hidden>
+      <div class="gallery-stage" id="galleryStage">
+        <div class="gallery-slide is-active" data-i="0">
+          <img src="assets/hanvi/hanvi-yellow.jpg" alt="" class="bg-blur" aria-hidden="true" />
+          <div class="photo-frame fit-yellow">
+            <img src="assets/hanvi/hanvi-yellow.jpg" alt="Hanvi in yellow dress" />
+          </div>
+        </div>
+        <div class="gallery-slide" data-i="1">
+          <img src="assets/hanvi/hanvi-smile.jpg" alt="" class="bg-blur" aria-hidden="true" />
+          <div class="photo-frame fit-smile">
+            <img src="assets/hanvi/hanvi-smile.jpg" alt="Hanvi smiling" />
+          </div>
+        </div>
+        <div class="gallery-slide" data-i="2">
+          <img src="assets/hanvi/hanvi-fun.jpg" alt="" class="bg-blur" aria-hidden="true" />
+          <div class="photo-frame fit-fun">
+            <img src="assets/hanvi/hanvi-fun.jpg" alt="Hanvi having fun" />
+          </div>
+        </div>
+        <div class="gallery-slide" data-i="3">
+          <img src="assets/hanvi/hanvi-craft.jpg" alt="" class="bg-blur" aria-hidden="true" />
+          <div class="photo-frame fit-craft">
+            <img src="assets/hanvi/hanvi-craft.jpg" alt="Hanvi with craft" />
+          </div>
+        </div>
+      </div>
+      <img src="assets/masha-full.png" alt="" class="masha-presenter" id="mashaPresenter" />
+      <div class="fs-hud bottom" id="galleryHud">
+        <p class="eyebrow">A wish for Hanvi</p>
+        <h2 class="speak-line" id="galleryTitle">Shine bright, Hanvi!</h2>
+        <p class="story-text soft" id="galleryCaption">
+          In your golden dress you look like a little princess. May your days stay this beautiful!
+        </p>
+        <div class="gallery-dots" id="galleryDots" aria-hidden="true">
+          <span class="is-on"></span><span></span><span></span><span></span>
+        </div>
+        <button type="button" class="next-btn" id="toFinale" hidden>One last adventure →</button>
+      </div>
+    </section>
+
+    <!-- 5 FIGHT -->
+    <section class="scene scene-finale" id="sceneFinale" data-scene="finale" hidden>
+      <div class="outer-frame">
+        <video class="bg-video" src="assets/masha-fight-sway.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
+        <div class="inner-frame portrait">
+          <video
+            id="fightImg"
+            poster="assets/masha-and-bear-snow.png"
+            src="assets/masha-fight-sway.mp4"
+            muted
+            playsinline
+            loop
+            preload="auto"
+          ></video>
+        </div>
+      </div>
+      <div class="fight-impact" id="fightImpact" aria-hidden="true"></div>
+      <div class="fs-hud bottom" id="fightHud">
+        <p class="eyebrow">Mischief mode</p>
+        <h2 class="speak-line">Play fight!</h2>
+        <p class="story-text">Masha vs Bear — Hanvi is laughing!</p>
+        <button type="button" class="next-btn fight-btn" id="startFight">Start the real fight!</button>
+        <div class="ending" id="endingBlock" hidden>
+          <p class="ending-title">The End… for now!</p>
+          <p class="story-text">Happy Children's Day, <strong>HANVI</strong>!</p>
+          <button type="button" class="next-btn replay-btn" id="replayStory">Play again</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
