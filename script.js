@@ -32,7 +32,7 @@ let speaking = false;
 let voiceReady = false;
 let cuteVoice = null;
 let speakToken = 0;
-let galleryTimer = null;
+let galleryRunId = 0;
 
 const CUTE = { pitch: 1.28, rate: 0.98 };
 
@@ -121,10 +121,12 @@ function stopSpeaking() {
 function speak(text, { onend } = {}) {
   const myToken = ++speakToken;
   let finished = false;
+  let keepAlive = null;
   const done = () => {
     if (finished || myToken !== speakToken) return;
     finished = true;
     speaking = false;
+    if (keepAlive) clearInterval(keepAlive);
     onend?.();
   };
   if (!window.speechSynthesis) {
@@ -141,16 +143,38 @@ function speak(text, { onend } = {}) {
   } else {
     utter.lang = "en-US";
   }
+  // Slightly slower so cute lines finish clearly
   utter.pitch = CUTE.pitch;
-  utter.rate = CUTE.rate;
+  utter.rate = Math.min(CUTE.rate, 0.92);
   utter.onend = done;
   utter.onerror = done;
+  // Long safety net only — never cut a greeting short
+  const safetyMs = Math.min(45000, 6000 + text.length * 140);
   setTimeout(() => {
     if (myToken === speakToken) done();
-  }, Math.min(18000, 2000 + text.length * 65));
+  }, safetyMs);
   setTimeout(() => {
-    if (myToken === speakToken) window.speechSynthesis.speak(utter);
-  }, 40);
+    if (myToken !== speakToken) return;
+    window.speechSynthesis.speak(utter);
+    // Chrome can pause mid-sentence — keep it alive until onend
+    keepAlive = setInterval(() => {
+      if (myToken !== speakToken || finished) {
+        clearInterval(keepAlive);
+        return;
+      }
+      if (window.speechSynthesis.speaking && window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+    }, 200);
+  }, 60);
+}
+
+function speakAsync(text) {
+  return new Promise((resolve) => speak(text, { onend: resolve }));
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function warmVoices() {
@@ -327,32 +351,32 @@ function setGallerySlide(i) {
 }
 
 async function startGallery() {
-  clearInterval(galleryTimer);
+  const runId = ++galleryRunId;
   toFinale.hidden = true;
-  const first = setGallerySlide(0);
+  setGallerySlide(0);
 
   await transitionTo("gallery", () => {
     gsap.fromTo("#mashaPresenter", { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 1, ease: "back.out(1.2)" });
     gsap.from("#galleryHud", { y: 20, opacity: 0, duration: 0.55, delay: 0.1 });
   });
-  speak(first.voice);
+  if (runId !== galleryRunId) return;
 
-  let i = 0;
-  galleryTimer = setInterval(() => {
-    i += 1;
-    if (i >= gallerySlides.length) {
-      clearInterval(galleryTimer);
-      toFinale.hidden = false;
-      gsap.fromTo(toFinale, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35 });
-      speak("Happy Children's Day, Hanvi! Keep shining!");
-      return;
-    }
-    speak(setGallerySlide(i).voice);
-  }, 4200);
+  for (let i = 0; i < gallerySlides.length; i++) {
+    if (runId !== galleryRunId) return;
+    const line = setGallerySlide(i);
+    await speakAsync(line.voice);
+    if (runId !== galleryRunId) return;
+    await wait(1600); // pause so wish can land before next photo
+  }
+
+  if (runId !== galleryRunId) return;
+  toFinale.hidden = false;
+  gsap.fromTo(toFinale, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35 });
+  speak("Happy Children's Day, Hanvi! Keep shining!");
 }
 
 async function startFinaleScene() {
-  clearInterval(galleryTimer);
+  galleryRunId += 1;
   endingBlock.hidden = true;
   startFight.hidden = false;
   if (fightImpact) {
@@ -365,41 +389,49 @@ async function startFinaleScene() {
   speak("Oh no! A real play fight! Masha versus Bear!");
 }
 
-function runFight() {
+async function runFight() {
   startFight.hidden = true;
   shower(SNOW, 60);
   shower(SPARKLES, 25);
   const vid = document.getElementById("fightImg");
   const impacts = ["BAM!", "WHOOSH!", "POW!", "HA!"];
 
-  gsap
-    .timeline({
-      onComplete: () => {
-        if (fightImpact) gsap.to(fightImpact, { opacity: 0, duration: 0.25 });
-        endStory();
-      },
-    })
-    .to(vid, { x: -16, rotation: -4, duration: 0.12, yoyo: true, repeat: 10, ease: "power1.inOut" })
-    .call(() => {
-      if (!fightImpact) return;
-      fightImpact.textContent = impacts[Math.floor(Math.random() * impacts.length)];
-      gsap.fromTo(fightImpact, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1.15, duration: 0.2, yoyo: true, repeat: 1 });
-    }, null, 0.3)
-    .to({}, { duration: 1.4 });
+  const animDone = new Promise((resolve) => {
+    gsap
+      .timeline({
+        onComplete: () => {
+          if (fightImpact) gsap.to(fightImpact, { opacity: 0, duration: 0.25 });
+          resolve();
+        },
+      })
+      .to(vid, { x: -16, rotation: -4, duration: 0.12, yoyo: true, repeat: 10, ease: "power1.inOut" })
+      .call(() => {
+        if (!fightImpact) return;
+        fightImpact.textContent = impacts[Math.floor(Math.random() * impacts.length)];
+        gsap.fromTo(fightImpact, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1.15, duration: 0.2, yoyo: true, repeat: 1 });
+      }, null, 0.3)
+      .to({}, { duration: 1.4 });
+  });
 
-  speak("Haha! What a real playful fight! Happy Children's Day, Hanvi!");
+  // Let the fight line finish fully before the goodbye
+  await speakAsync("Haha! What a real playful fight! Happy Children's Day, Hanvi!");
+  await animDone;
+  await wait(400);
+  await endStory();
 }
 
-function endStory() {
+async function endStory() {
   endingBlock.hidden = false;
   shower(SPARKLES, 35);
   gsap.fromTo(endingBlock, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.55 });
-  speak("The end for now! Happy Children's Day, Hanvi! Bye bye!");
+  await speakAsync(
+    "Happy Children's Day this year, Hanvi! Wishing you love, laughter, and lots of magic. Bye bye, Hanvi!"
+  );
 }
 
 async function replay() {
   stopSpeaking();
-  clearInterval(galleryTimer);
+  galleryRunId += 1;
   endingBlock.hidden = true;
   await transitionTo("door", () => {
     gsap.from(".fs-copy", { opacity: 0, scale: 0.95, duration: 0.5 });

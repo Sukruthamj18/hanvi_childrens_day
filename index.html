@@ -60,20 +60,22 @@
       <div class="hug-hearts" id="hugHearts" aria-hidden="true"></div>
     </section>
 
-    <!-- 2 FLOWERS — laptop fit: blurred sides + full vertical video -->
+    <!-- 2 FLOWERS — outer card + slightly smaller inner video card -->
     <section class="scene scene-flowers" id="sceneFlowers" data-scene="flowers" hidden>
       <div class="outer-frame">
-        <video class="bg-video" src="assets/masha-flowers.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
-        <div class="inner-frame portrait">
-          <video
-            id="mashaFlowers"
-            poster="assets/masha-flowers.png"
-            src="assets/masha-flowers.mp4"
-            muted
-            playsinline
-            loop
-            preload="auto"
-          ></video>
+        <video class="bg-video" src="assets/masha-flowers-wide.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
+        <div class="media-card">
+          <div class="video-card">
+            <video
+              id="mashaFlowers"
+              poster="assets/masha-flowers.png"
+              src="assets/masha-flowers-wide.mp4"
+              muted
+              playsinline
+              loop
+              preload="auto"
+            ></video>
+          </div>
         </div>
       </div>
       <div class="fs-hud bottom">
@@ -89,16 +91,18 @@
     <section class="scene scene-party" id="sceneParty" data-scene="party" hidden>
       <div class="outer-frame">
         <video class="bg-video" src="assets/masha-chocolates.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
-        <div class="inner-frame landscape">
-          <video
-            id="mashaBear"
-            poster="assets/masha-bear-forest.png"
-            src="assets/masha-chocolates.mp4"
-            muted
-            playsinline
-            loop
-            preload="auto"
-          ></video>
+        <div class="media-card">
+          <div class="video-card">
+            <video
+              id="mashaBear"
+              poster="assets/masha-bear-forest.png"
+              src="assets/masha-chocolates.mp4"
+              muted
+              playsinline
+              loop
+              preload="auto"
+            ></video>
+          </div>
         </div>
       </div>
       <div class="fs-hud bottom">
@@ -152,20 +156,22 @@
       </div>
     </section>
 
-    <!-- 5 FIGHT -->
+    <!-- 5 FIGHT — outer card + inner video card -->
     <section class="scene scene-finale" id="sceneFinale" data-scene="finale" hidden>
       <div class="outer-frame">
-        <video class="bg-video" src="assets/masha-fight-sway.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
-        <div class="inner-frame portrait">
-          <video
-            id="fightImg"
-            poster="assets/masha-and-bear-snow.png"
-            src="assets/masha-fight-sway.mp4"
-            muted
-            playsinline
-            loop
-            preload="auto"
-          ></video>
+        <video class="bg-video" src="assets/masha-fight-wide.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
+        <div class="media-card">
+          <div class="video-card">
+            <video
+              id="fightImg"
+              poster="assets/masha-and-bear-snow.png"
+              src="assets/masha-fight-wide.mp4"
+              muted
+              playsinline
+              loop
+              preload="auto"
+            ></video>
+          </div>
         </div>
       </div>
       <div class="fight-impact" id="fightImpact" aria-hidden="true"></div>
@@ -175,8 +181,8 @@
         <p class="story-text">Masha vs Bear — Hanvi is laughing!</p>
         <button type="button" class="next-btn fight-btn" id="startFight">Start the real fight!</button>
         <div class="ending" id="endingBlock" hidden>
-          <p class="ending-title">The End… for now!</p>
-          <p class="story-text">Happy Children's Day, <strong>HANVI</strong>!</p>
+          <p class="ending-title">Happy Children's Day, Hanvi!</p>
+          <p class="story-text">Wishing you love, laughter and magic this year. Bye bye!</p>
           <button type="button" class="next-btn replay-btn" id="replayStory">Play again</button>
         </div>
       </div>
